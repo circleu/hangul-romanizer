@@ -195,7 +195,6 @@ int main(void) {
                 else if (result[i] == 'l') result[i] = 'r';
             }
 
-            // 겹받침 처리
             if (checkVowel(result[i - 1]) && (checkConsonant(result[i + 1]) || !checkVowel(result[i + 1]))) {
                 if (checkConsonant(result[i + 2]) || !checkVowel(result[i + 2])) {
                     // 'ㄳ', 'ㅄ', 'ㅆ' 처리
@@ -229,14 +228,17 @@ int main(void) {
                         }
                     }
                     
-                    // 'ㅊ' 처리
+                    // 'ㅊ' 종성 처리
                     else if (result[i] == 'c') {
                         pullArray((char*)result, i + 1, STR_LEN_MAX);
                         result[i] = 't';
                     }
+
+                    // 'ㅇ'으로 인한 'ㄹ' 비음화 처리
+                    if (result[i] == 'n' && result[i + 1] == 'g' && result[i + 2] == 'r') result[i + 2] = 'n';
                 }
                 
-                // 'ㅅ', 'ㅈ', 처리
+                // 'ㅅ', 'ㅈ' 종성 처리
                 if (result[i] == 's' || result[i] == 'j') result[i] = 't';
 
                 // 'ㅎ' 종성의 격음화 처리
@@ -263,8 +265,8 @@ int main(void) {
 
                 // 'ㅂ' 비음화 처리
                 if (result[i] == 'p' && (result[i + 1] == 'n' || result[i + 1] == 'r')) result[i] = 'm';
-                
-                // 'ㄹ' 비음화 처리
+
+                // 'ㅁ'으로 인한 'ㄹ' 비음화 처리
                 if (result[i] == 'm' && result[i + 1] == 'r') result[i + 1] = 'n';
             }
 
