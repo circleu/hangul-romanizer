@@ -110,6 +110,14 @@ void pullArray(char* array, int index, int arrsize) {
     array[arrsize] = 0;
 }
 
+void pushArray(char* array, int index, int arrsize) {
+    for (int i = arrsize; i > index; i--) {
+        if (array[i] == 0 && array[i - 1] == 0) continue;
+        else array[i] = array[i - 1];
+    }
+    array[index] = 0;
+}
+
 int main(void) {
     setlocale(LC_ALL, "");
     wchar_t Text[STR_LEN_MAX] = {0, };
@@ -132,7 +140,7 @@ int main(void) {
     fclose(file);
 }
 
-    char result[STR_LEN_MAX] = {0, };
+    char result[STR_LEN_MAX * 2] = {0, };
 {
     int index = 0;
     int first, initial, medial, final;
@@ -214,7 +222,7 @@ int main(void) {
                             pullArray((char*)result, i + 1, STR_LEN_MAX);
                         else if (result[i + 1] == 'h') {
                             pullArray((char*)result, i + 1, STR_LEN_MAX);
-                            // 격음화
+                            // 격음화 처리
                             if (result[i + 1] == 'g') result[i + 1] = 'K';
                             else if (result[i + 1] == 'd') result[i + 1] = 'T';
                             else if (result[i + 1] == 'b') result[i + 1] = 'P';
@@ -227,9 +235,37 @@ int main(void) {
                         result[i] = 't';
                     }
                 }
-
+                
                 // 'ㅅ', 'ㅈ', 처리
                 if (result[i] == 's' || result[i] == 'j') result[i] = 't';
+
+                // 'ㅎ' 종성의 격음화 처리
+                if (result[i] == 'h') {
+                    pullArray((char*)result, i, STR_LEN_MAX);
+
+                    if (result[i] == 'g') result[i] = 'K';
+                    else if (result[i] == 'd') result[i] = 'T';
+                    else if (result[i] == 'b') result[i] = 'P';
+                }
+
+                // 'ㄱ' 비음화 처리
+                if (result[i] == 'k' && result[i + 1] == 'n') {
+                    pushArray((char*)result, i, STR_LEN_MAX);
+                    result[i] = 'n';
+                    result[i + 1] = 'g';
+                }
+
+                // 'ㄴ' 유음화 처리
+                if (result[i] == 'n' && result[i + 1] == 'r') result[i] = 'l';
+
+                // 'ㄷ' 비음화 처리
+                if (result[i] == 't' && result[i + 1] == 'n') result[i] = 'n';
+
+                // 'ㅂ' 비음화 처리
+                if (result[i] == 'p' && (result[i + 1] == 'n' || result[i + 1] == 'r')) result[i] = 'm';
+                
+                // 'ㄹ' 비음화 처리
+                if (result[i] == 'm' && result[i + 1] == 'r') result[i + 1] = 'n';
             }
 
             // 'ㄹ'이 두 번 연속되는 경우 처리
